@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ resume.data.full_name }} - Resume</title>
+    <style>
+        @page {
+            margin: 0;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Calibri', Arial, sans-serif;
+            font-size: 11pt;
+            color: #000;
+            box-sizing: border-box;
+        }
+
+        .container {
+            padding: 40px 50px 0 50px; /* No bottom padding */
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .header {
+            border-bottom: 2px solid #444;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24pt;
+            margin: 0;
+        }
+
+        .contact-info {
+            font-size: 10pt;
+            color: #333;
+            margin-top: 5px;
+        }
+
+        h2 {
+            font-size: 12pt;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 3px;
+            color: #333;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .entry {
+            margin-bottom: 12px;
+        }
+
+        .entry-title {
+            font-weight: bold;
+            font-size: 11.5pt;
+        }
+
+        .entry-sub {
+            font-style: italic;
+            color: #555;
+            font-size: 10pt;
+        }
+
+        .entry-date {
+            float: right;
+            font-size: 10pt;
+            color: #777;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        ul li {
+            margin-bottom: 5px;
+        }
+
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>{{ resume.data.full_name }}</h1>
+        <div class="contact-info">
+            {% if resume.data.phone %}Tel: {{ resume.data.phone }}{% endif %}
+            {% if resume.data.email %}{% if resume.data.phone %} | {% endif %}E-mail: {{ resume.data.email }}{% endif %}
+        </div>
+    </div>
+
+    {% if resume.data.experience %}
+    <div class="section">
+        <h2>Work Experience</h2>
+        {% for title, company, duration, description in resume.data.experience %}
+            {% if title or company or duration or description %}
+            <div class="entry">
+                <div class="clearfix">
+                    <div class="entry-title">{{ title }}</div>
+                    <div class="entry-date">{{ duration }}</div>
+                </div>
+                {% if company %}<div class="entry-sub">{{ company }}</div>{% endif %}
+                {% if description %}<p>{{ description }}</p>{% endif %}
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if resume.data.education %}
+    <div class="section">
+        <h2>Education</h2>
+        {% for degree, institution, year in resume.data.education %}
+            {% if degree or institution or year %}
+            <div class="entry">
+                <div class="clearfix">
+                    <div class="entry-title">{{ degree }}</div>
+                    <div class="entry-date">{{ year }}</div>
+                </div>
+                {% if institution %}<div class="entry-sub">{{ institution }}</div>{% endif %}
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if resume.data.certificates %}
+    <div class="section">
+        <h2>Certificates</h2>
+        <ul>
+            {% for cert in resume.data.certificates %}
+                {% if cert %}<li>{{ cert }}</li>{% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if resume.data.skills %}
+    <div class="section">
+        <h2>Skills</h2>
+        <ul>
+            {% for skill in resume.data.skills %}
+                {% if skill %}<li>{{ skill }}</li>{% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Resume PDF</title>
+    <style>
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            padding: 50px;
+            font-size: 14px;
+            color: #333;
+        }
+        h1 {
+            font-size: 26px;
+            margin-bottom: 5px;
+        }
+        h2 {
+            font-size: 18px;
+            margin-top: 30px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        p {
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>{{ resume.data.full_name }}</h1>
+    <p><strong>Email:</strong> {{ resume.data.email }}</p>
+    <p><strong>Phone:</strong> {{ resume.data.phone }}</p>
+
+    <div class="section">
+        <h2>Education</h2>
+        <p>{{ resume.data.education|linebreaks }}</p>
+    </div>
+
+    <div class="section">
+        <h2>Experience</h2>
+        <p>{{ resume.data.experience|linebreaks }}</p>
+    </div>
+
+    <div class="section">
+        <h2>Skills</h2>
+        <p>{{ resume.data.skills|linebreaks }}</p>
+    </div>
+
+</body>
+</html> -->

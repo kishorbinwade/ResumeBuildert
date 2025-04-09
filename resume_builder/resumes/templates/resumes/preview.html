@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Preview</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 30px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { font-size: 28px; margin-bottom: 10px; }
+        .section { margin-top: 30px; }
+        .button { margin-top: 40px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>{{ resume.data.full_name }}</h1>
+    <p><strong>Email:</strong> {{ resume.data.email }}</p>
+    <p><strong>Phone:</strong> {{ resume.data.phone }}</p>
+
+    <div class="section">
+        <h2>Education</h2>
+        {% for degree, institution, year in resume.data.education %}
+            <p><strong>{{ degree }}</strong>, {{ institution }} ({{ year }})</p>
+        {% empty %}
+            <p>No education details available.</p>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        <h2>Experience</h2>
+        {% for title, company, duration, description in resume.data.experience %}
+            <p><strong>{{ title }}</strong> at {{ company }} ({{ duration }})</p>
+            <p>{{ description }}</p>
+        {% empty %}
+            <p>No experience details available.</p>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        <h2>Skills</h2>
+        <ul>
+        {% for skill in resume.data.skills %}
+            <li>{{ skill }}</li>
+        {% empty %}
+            <li>No skills added.</li>
+        {% endfor %}
+        </ul>
+    </div>
+
+    <div class="button">
+        {% if not resume.is_paid %}
+            {% if not DISABLE_PAYMENT %}
+                <form action="{% url 'payment_success' resume.uuid %}" method="POST">
+                    {% csrf_token %}
+                    <script
+                        src="https://checkout.razorpay.com/v1/checkout.js"
+                        data-key="{{ RAZORPAY_KEY_ID }}"
+                        data-amount="2000"
+                        data-currency="INR"
+                        data-buttontext="Pay ₹20 to Download"
+                        data-name="Resume Builder"
+                        data-description="Resume PDF Download"
+                        data-prefill.name="{{ resume.data.full_name }}"
+                        data-theme.color="#3399cc">
+                    </script>
+                </form>
+            {% else %}
+                <p><em>Test Mode: Payment is disabled</em></p>
+                <a href="{% url 'download_pdf' resume.uuid %}">Download Resume as PDF</a>
+            {% endif %}
+        {% else %}
+            <a href="{% url 'download_pdf' resume.uuid %}">Download Resume as PDF</a>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Preview</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 30px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { font-size: 28px; margin-bottom: 10px; }
+        .section { margin-top: 30px; }
+        .button { margin-top: 40px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>{{ resume.data.full_name }}</h1>
+    <p><strong>Email:</strong> {{ resume.data.email }}</p>
+    <p><strong>Phone:</strong> {{ resume.data.phone }}</p>
+
+    <div class="section">
+        <h2>Education</h2>
+        <p>{{ resume.data.education|linebreaks }}</p>
+    </div>
+
+    <div class="section">
+        <h2>Experience</h2>
+        <p>{{ resume.data.experience|linebreaks }}</p>
+    </div>
+
+    <div class="section">
+        <h2>Skills</h2>
+        <p>{{ resume.data.skills|linebreaks }}</p>
+    </div>
+
+    <div class="button">
+        {% if not resume.is_paid %}
+            {% if not DISABLE_PAYMENT %}
+                <form action="{% url 'payment_success' resume.uuid %}" method="POST">
+                    {% csrf_token %}
+                    <script
+                        src="https://checkout.razorpay.com/v1/checkout.js"
+                        data-key="{{ RAZORPAY_KEY_ID }}"
+                        data-amount="2000"
+                        data-currency="INR"
+                        data-buttontext="Pay ₹20 to Download"
+                        data-name="Resume Builder"
+                        data-description="Resume PDF Download"
+                        data-prefill.name="{{ resume.data.full_name }}"
+                        data-theme.color="#3399cc">
+                    </script>
+                </form>
+            {% else %}
+                <p><em>Test Mode: Payment is disabled</em></p>
+                <a href="{% url 'download_pdf' resume.uuid %}">Download Resume as PDF</a>
+            {% endif %}
+        {% else %}
+            <a href="{% url 'download_pdf' resume.uuid %}">Download Resume as PDF</a>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html> -->

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Resume</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 40px; }
+        h1 { font-size: 28px; margin-bottom: 20px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        .section {
+            margin-bottom: 30px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .multi-entry {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .remove-btn {
+            position: absolute;
+            right: 0;
+            top: 0;
+            background: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .add-btn {
+            margin-top: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Create Your Resume</h1>
+    <form method="post" action="{% url 'create_resume' %}">
+        {% csrf_token %}
+
+        <div class="section">
+            <label>Full Name</label>
+            <input type="text" name="full_name" required>
+
+            <label>Email</label>
+            <input type="email" name="email" required>
+
+            <label>Phone</label>
+            <input type="text" name="phone" required>
+        </div>
+
+        <!-- Education Section -->
+        <div class="section">
+            <h2>Education</h2>
+            <div id="education-container"></div>
+            <div id="education-template" class="multi-entry" style="display: none;">
+                <label>Degree</label>
+                <input type="text" name="education_degree">
+
+                <label>Institution</label>
+                <input type="text" name="education_institution">
+
+                <label>Year</label>
+                <input type="text" name="education_year">
+
+                <button type="button" class="remove-btn" onclick="removeEntry(this)">Remove</button>
+            </div>
+            <button type="button" class="add-btn" onclick="addEntry('education')">Add Education</button>
+        </div>
+
+        <!-- Experience Section -->
+        <div class="section">
+            <h2>Experience</h2>
+            <div id="experience-container"></div>
+            <div id="experience-template" class="multi-entry" style="display: none;">
+                <label>Job Title</label>
+                <input type="text" name="experience_title">
+
+                <label>Company</label>
+                <input type="text" name="experience_company">
+
+                <label>Duration</label>
+                <input type="text" name="experience_duration">
+
+                <label>Description</label>
+                <textarea name="experience_description" rows="3"></textarea>
+
+                <button type="button" class="remove-btn" onclick="removeEntry(this)">Remove</button>
+            </div>
+            <button type="button" class="add-btn" onclick="addEntry('experience')">Add Experience</button>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="section">
+            <h2>Skills</h2>
+            <div id="skills-container"></div>
+            <div id="skills-template" class="multi-entry" style="display: none;">
+                <label>Skill</label>
+                <input type="text" name="skills_item">
+                <button type="button" class="remove-btn" onclick="removeEntry(this)">Remove</button>
+            </div>
+            <button type="button" class="add-btn" onclick="addEntry('skills')">Add Skill</button>
+        </div>
+
+        <button type="submit">Preview Resume</button>
+    </form>
+
+    <script>
+        function addEntry(section) {
+            const container = document.getElementById(section + '-container');
+            const template = document.getElementById(section + '-template');
+            const clone = template.cloneNode(true);
+            clone.removeAttribute('id');
+            clone.style.display = 'block';
+
+            // Set [] for names and re-enable 'required'
+            const inputs = clone.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.name += '[]';
+                input.required = true;
+            });
+
+            container.appendChild(clone);
+        }
+
+        function removeEntry(button) {
+            button.parentElement.remove();
+        }
+
+        window.onload = () => {
+            ['education', 'experience', 'skills'].forEach(section => {
+                const template = document.getElementById(section + '-template');
+                const inputs = template.querySelectorAll('input, textarea');
+                inputs.forEach(input => input.required = false); // Disable on hidden template
+                addEntry(section);
+            });
+        };
+    </script>
+</body>
+</html>
+
+
+
+  
+
+
+
+
+<!-- templates/resumes/create.html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Create Resume</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background-color: #f7f7f7;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #3399cc;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #287ba5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Create Your Resume</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Preview Resume</button>
+    </form>
+</body>
+</html> -->
+
+
