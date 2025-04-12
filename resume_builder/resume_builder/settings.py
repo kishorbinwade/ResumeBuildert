@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-s+1l)(2oyo+d4@2h*5@mp%0bm7&al8hgt4en^jnx%9s3l^2l3k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Razorpay API keys
 DISABLE_PAYMENT = True  # Set to False after buying Razorpay credentials
