@@ -19,7 +19,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('create/', include('resumes.urls')),  # Use the resumes app URLs
+    path('', include('resumes.urls')),  # Use the resumes app URLs
 ]
 
 
