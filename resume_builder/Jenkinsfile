@@ -1,0 +1,59 @@
+@Library("shared") _
+
+pipeline {
+    agent {label "agent v"}
+
+    stages {
+        stage('Hello') {
+            steps {
+                script{
+                    hello()
+                }
+            }
+        }
+        stage('Git Repo Clone') {
+            steps {
+                script{
+                    clone("https://github.com/kishorbinwade/ResumeBuildert.git","master")
+                
+                }
+            }
+        }
+        
+        
+        
+        stage('build repo') {
+            steps {
+                sh "docker build -t resume-app-one:latest ./resume_builder "
+                echo 'repo build is done'
+            }
+        }
+        
+        stage('push to docker repo') {
+            steps {
+                
+                echo 'Hello pushing the image to docker repo'
+                withCredentials([usernamePassword('credentialsId':"dockerHubCred",
+                                 passwordVariable:"dockerHubPass",
+                                usernameVariable:"dockerHubUser")])
+                {
+                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass} "   
+                sh "docker image tag resume-app-one:latest ${env.dockerHubUser}/resume-app-one:latest"
+
+                sh "docker push ${env.dockerHubUser}/resume-app-one:latest "
+                }
+                
+            }
+        }
+        
+        
+        
+        stage('deployment git repo') {
+            steps {
+                sh "docker compose -f ./resume_builder/docker-compose.yml up -d"
+                echo 'deployment done !! '
+                echo 'deployment done !! with git jenskinsfile pipline script SCM'
+            }
+        }
+    }
+}
