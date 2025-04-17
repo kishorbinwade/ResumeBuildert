@@ -52,7 +52,7 @@ pipeline {
             steps {
                 sh "docker compose -f ./resume_builder/docker-compose.yml up -d"
                 echo 'deployment done !! '
-                echo 'deployment done !! with git jenskinsfile pipline script SCM'
+                echo 'deployment done !! with git jenskinsfile pipline script SCM  '
             }
         }
     }
